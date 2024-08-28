@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pet.mapper.PetFosterInstitutionMapper">
+
+    <resultMap type="PetFosterInstitution" id="PetFosterInstitutionResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="contacts" column="contacts"/>
+        <result property="phonenumber" column="phonenumber"/>
+        <result property="businessScope" column="business_scope"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="count" column="count"/>
+    </resultMap>
+
+    <sql id="selectPetFosterInstitutionVo">
+        select id, name, contacts, phonenumber, business_scope, create_by, create_by_name, create_time, update_by, update_time, remark from pet_foster_institution
+    </sql>
+
+    <select id="selectPetFosterInstitutionList" parameterType="PetFosterInstitution"
+            resultMap="PetFosterInstitutionResult">
+        <include refid="selectPetFosterInstitutionVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="contacts != null  and contacts != ''">and contacts = #{contacts}</if>
+            <if test="phonenumber != null  and phonenumber != ''">and phonenumber = #{phonenumber}</if>
+            <if test="businessScope != null  and businessScope != ''">and business_scope = #{businessScope}</if>
+            <if test="createByName != null  and createByName != ''">and create_by_name like concat('%', #{createByName},
+                '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getEchartsData" parameterType="PetFosterInstitution" resultMap="PetFosterInstitutionResult">
+       SELECT
+	b.`name`,
+	COUNT( a.id ) AS count
+FROM
+	pet_foster_application a
+	LEFT JOIN pet_foster_institution b ON a.institution_id = b.id
+GROUP BY
+	a.institution_id
+    </select>
+
+    <select id="selectPetFosterInstitutionById" parameterType="Long" resultMap="PetFosterInstitutionResult">
+        <include refid="selectPetFosterInstitutionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPetFosterInstitution" parameterType="PetFosterInstitution" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into pet_foster_institution
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="contacts != null and contacts != ''">contacts,</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+            <if test="businessScope != null and businessScope != ''">business_scope,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="contacts != null and contacts != ''">#{contacts},</if>
+            <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+            <if test="businessScope != null and businessScope != ''">#{businessScope},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePetFosterInstitution" parameterType="PetFosterInstitution">
+        update pet_foster_institution
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="contacts != null and contacts != ''">contacts = #{contacts},</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber = #{phonenumber},</if>
+            <if test="businessScope != null and businessScope != ''">business_scope = #{businessScope},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePetFosterInstitutionById" parameterType="Long">
+        delete from pet_foster_institution where id = #{id}
+    </delete>
+
+    <delete id="deletePetFosterInstitutionByIds" parameterType="String">
+        delete from pet_foster_institution where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pet.mapper.PetLogMapper">
+
+    <resultMap type="PetLog" id="PetLogResult">
+        <result property="id" column="id"/>
+        <result property="logDescription" column="log_description"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectPetLogVo">
+        select a.* from pet_log a
+        left join sys_user u on a.create_by=u.user_id
+    </sql>
+
+    <select id="selectPetLogList" parameterType="PetLog" resultMap="PetLogResult">
+        <include refid="selectPetLogVo"/>
+        <where>
+            <if test="logDescription != null  and logDescription != ''">and a.log_description = #{logDescription}</if>
+            <if test="createByName != null  and createByName != ''">and a.create_by_name like concat('%',
+                #{createByName},
+                '%')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        ORDER BY a.id DESC
+    </select>
+
+    <select id="selectPetLogById" parameterType="Long" resultMap="PetLogResult">
+        <include refid="selectPetLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPetLog" parameterType="PetLog" useGeneratedKeys="true" keyProperty="id">
+        insert into pet_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logDescription != null and logDescription != ''">log_description,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="logDescription != null and logDescription != ''">#{logDescription},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePetLog" parameterType="PetLog">
+        update pet_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logDescription != null and logDescription != ''">log_description = #{logDescription},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePetLogById" parameterType="Long">
+        delete from pet_log where id = #{id}
+    </delete>
+
+    <delete id="deletePetLogByIds" parameterType="String">
+        delete from pet_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pet.mapper.PetAdoptApplicationMapper">
+
+    <resultMap type="PetAdoptApplication" id="PetAdoptApplicationResult">
+        <result property="id" column="id"/>
+        <result property="adoptId" column="adopt_id"/>
+        <result property="name" column="name"/>
+        <result property="sex" column="sex"/>
+        <result property="phonenumber" column="phonenumber"/>
+        <result property="email" column="email"/>
+        <result property="address" column="address"/>
+        <result property="adoptionExpenses" column="adoption_expenses"/>
+        <result property="paymentStatus" column="payment_status"/>
+        <result property="state" column="state"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <association property="petAdopt" javaType="com.ruoyi.pet.domain.PetAdopt">
+            <result property="id" column="p_id"/>
+            <result property="name" column="p_name"/>
+            <result property="category" column="p_category"/>
+            <result property="img" column="p_img"/>
+            <result property="age" column="p_age"/>
+            <result property="temperament" column="p_temperament"/>
+            <result property="vaccinum" column="p_vaccinum"/>
+            <result property="adoptionExpenses" column="p_adoption_expenses"/>
+            <result property="state" column="p_state"/>
+            <result property="createBy" column="p_create_by"/>
+            <result property="createByName" column="p_create_by_name"/>
+            <result property="createTime" column="p_create_time"/>
+            <result property="updateBy" column="p_update_by"/>
+            <result property="updateTime" column="p_update_time"/>
+            <result property="remark" column="p_remark"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectPetAdoptApplicationVo">
+SELECT
+	a.id,
+	a.adopt_id,
+	a.NAME,
+	a.sex,
+	a.phonenumber,
+	a.email,
+	a.address,
+	a.adoption_expenses,
+	a.payment_status,
+	a.state,
+	a.create_by,
+	a.create_by_name,
+	a.create_time,
+	a.update_by,
+	a.update_time,
+	a.remark,
+	b.id AS p_id,
+	b.NAME AS p_name,
+	b.category AS p_category,
+	b.img AS p_img,
+	b.age AS p_age,
+	b.temperament AS p_temperament,
+	b.vaccinum AS p_vaccinum,
+	b.adoption_expenses AS p_adoption_expenses,
+	b.state AS p_state,
+	b.create_by AS p_create_by,
+	b.create_by_name AS p_create_by_name,
+	b.create_time AS p_create_time,
+	b.update_by AS p_update_by,
+	b.update_time AS p_update_time,
+	b.remark AS p_remark
+FROM
+	pet_adopt_application a
+	LEFT JOIN pet_adopt b ON a.adopt_id = b.id
+	LEFT JOIN sys_user u on a.create_by=u.user_id
+	</sql>
+
+    <select id="selectPetAdoptApplicationList" parameterType="PetAdoptApplication"
+            resultMap="PetAdoptApplicationResult">
+        <include refid="selectPetAdoptApplicationVo"/>
+        <where>
+            <if test="adoptId != null ">and a.adopt_id = #{adoptId}</if>
+            <if test="name != null  and name != ''">and a.name = #{name}</if>
+            <if test="sex != null  and sex != ''">and a.sex = #{sex}</if>
+            <if test="phonenumber != null  and phonenumber != ''">and a.phonenumber = #{phonenumber}</if>
+            <if test="email != null  and email != ''">and a.email = #{email}</if>
+            <if test="address != null  and address != ''">and a.address = #{address}</if>
+            <if test="adoptionExpenses != null ">and a.adoption_expenses = #{adoptionExpenses}</if>
+            <if test="paymentStatus != null  and paymentStatus != ''">and a.payment_status = #{paymentStatus}</if>
+            <if test="state != null  and state != ''">and a.state = #{state}</if>
+            <if test="createByName != null  and createByName != ''">and a.create_by_name like concat('%',
+                #{createByName},
+                '%')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        ORDER BY a.id DESC
+    </select>
+
+    <select id="selectPetAdoptApplicationById" parameterType="Long" resultMap="PetAdoptApplicationResult">
+        <include refid="selectPetAdoptApplicationVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertPetAdoptApplication" parameterType="PetAdoptApplication" useGeneratedKeys="true" keyProperty="id">
+        insert into pet_adopt_application
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="adoptId != null">adopt_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="sex != null and sex != ''">sex,</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+            <if test="email != null and email != ''">email,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="adoptionExpenses != null">adoption_expenses,</if>
+            <if test="paymentStatus != null and paymentStatus != ''">payment_status,</if>
+            <if test="state != null and state != ''">state,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="adoptId != null">#{adoptId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="sex != null and sex != ''">#{sex},</if>
+            <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+            <if test="email != null and email != ''">#{email},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="adoptionExpenses != null">#{adoptionExpenses},</if>
+            <if test="paymentStatus != null and paymentStatus != ''">#{paymentStatus},</if>
+            <if test="state != null and state != ''">#{state},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePetAdoptApplication" parameterType="PetAdoptApplication">
+        update pet_adopt_application
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="adoptId != null">adopt_id = #{adoptId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber = #{phonenumber},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="adoptionExpenses != null">adoption_expenses = #{adoptionExpenses},</if>
+            <if test="paymentStatus != null and paymentStatus != ''">payment_status = #{paymentStatus},</if>
+            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePetAdoptApplicationById" parameterType="Long">
+        delete from pet_adopt_application where id = #{id}
+    </delete>
+
+    <delete id="deletePetAdoptApplicationByIds" parameterType="String">
+        delete from pet_adopt_application where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysUserShoppingCartMapper">
+
+    <resultMap type="SysUserShoppingCart" id="SysUserShoppingCartResult">
+        <result property="id" column="id"/>
+        <result property="storeInfoId" column="store_info_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="number" column="number"/>
+        <result property="unitPrice" column="unit_price"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectSysUserShoppingCartVo">
+        SELECT a.* , b.NAME AS product_name  FROM sys_user_shopping_cart a
+	    LEFT JOIN store_commodity b ON a.product_id = b.id
+	    LEFT JOIN sys_user u ON a.create_by = u.user_id
+    </sql>
+
+    <select id="selectSysUserShoppingCartList" parameterType="SysUserShoppingCart"
+            resultMap="SysUserShoppingCartResult">
+        <include refid="selectSysUserShoppingCartVo"/>
+        <where>
+            <if test="storeInfoId != null ">and a.store_info_id = #{storeInfoId}</if>
+            <if test="productId != null ">and a.product_id = #{productId}</if>
+            <if test="number != null ">and a.number = #{number}</if>
+            <if test="unitPrice != null ">and a.unit_price = #{unitPrice}</if>
+            <if test="createByName != null  and createByName != ''">and a.create_by_name like concat('%',
+                #{createByName},
+                '%')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        ORDER BY a.id DESC
+    </select>
+
+    <select id="selectSysUserShoppingCartById" parameterType="Long" resultMap="SysUserShoppingCartResult">
+        <include refid="selectSysUserShoppingCartVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertSysUserShoppingCart" parameterType="SysUserShoppingCart" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user_shopping_cart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storeInfoId != null">store_info_id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="number != null">number,</if>
+            <if test="unitPrice != null">unit_price,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storeInfoId != null">#{storeInfoId},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="number != null">#{number},</if>
+            <if test="unitPrice != null">#{unitPrice},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysUserShoppingCart" parameterType="SysUserShoppingCart">
+        update sys_user_shopping_cart
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storeInfoId != null">store_info_id = #{storeInfoId},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="unitPrice != null">unit_price = #{unitPrice},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysUserShoppingCartById" parameterType="Long">
+        delete from sys_user_shopping_cart where id = #{id}
+    </delete>
+
+    <delete id="deleteSysUserShoppingCartByIds" parameterType="String">
+        delete from sys_user_shopping_cart where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.order.mapper.OrderInfoMapper">
+
+    <resultMap type="OrderInfo" id="OrderInfoResult">
+        <result property="id" column="a_id"/>
+        <result property="storeInfoId" column="a_store_info_id"/>
+        <result property="orderNo" column="a_order_no"/>
+        <result property="sysUserAddressId" column="a_sys_user_address_id"/>
+        <result property="orderPrice" column="a_order_price"/>
+        <result property="fksjTime" column="a_fksj_time"/>
+        <result property="productId" column="a_product_id"/>
+        <result property="number" column="a_number"/>
+        <result property="unitPrice" column="a_unit_price"/>
+        <result property="price" column="a_price"/>
+        <result property="state" column="a_state"/>
+        <result property="createBy" column="a_create_by"/>
+        <result property="createByName" column="a_create_by_name"/>
+        <result property="createTime" column="a_create_time"/>
+        <result property="updateBy" column="a_update_by"/>
+        <result property="updateTime" column="a_update_time"/>
+        <result property="remark" column="a_remark"/>
+        <association property="storeInfo" javaType="com.ruoyi.store.domain.StoreInfo">
+            <result property="id" column="b_id"/>
+            <result property="name" column="b_name"/>
+            <result property="businessScope" column="b_business_scope"/>
+            <result property="contacts" column="b_contacts"/>
+            <result property="phonenumber" column="b_phonenumber"/>
+            <result property="address" column="b_address"/>
+            <result property="createBy" column="b_create_by"/>
+            <result property="createByName" column="b_create_by_name"/>
+            <result property="createTime" column="b_create_time"/>
+            <result property="updateBy" column="b_update_by"/>
+            <result property="updateTime" column="b_update_time"/>
+            <result property="remark" column="b_remark"/>
+        </association>
+        <association property="sysUserAddress" javaType="com.ruoyi.common.core.domain.entity.SysUserAddress">
+            <result property="id" column="c_id"/>
+            <result property="recipient" column="c_recipient"/>
+            <result property="phonenumber" column="c_phonenumber"/>
+            <result property="province" column="c_province"/>
+            <result property="city" column="c_city"/>
+            <result property="area" column="c_area"/>
+            <result property="address" column="c_address"/>
+            <result property="createBy" column="c_create_by"/>
+            <result property="createByName" column="c_create_by_name"/>
+            <result property="createTime" column="c_create_time"/>
+            <result property="updateBy" column="c_update_by"/>
+            <result property="updateTime" column="c_update_time"/>
+            <result property="remark" column="c_remark"/>
+        </association>
+        <association property="storeCommodity" javaType="com.ruoyi.store.domain.StoreCommodity">
+            <result property="id" column="d_id"/>
+            <result property="name" column="d_name"/>
+            <result property="price" column="d_price"/>
+            <result property="type" column="d_type"/>
+            <result property="category" column="d_category"/>
+            <result property="img" column="d_img"/>
+            <result property="brand" column="d_brand"/>
+            <result property="specifications" column="d_specifications"/>
+            <result property="bzqTime" column="d_bzq_time"/>
+            <result property="scrqTime" column="d_scrq_time"/>
+            <result property="createBy" column="d_create_by"/>
+            <result property="createByName" column="d_create_by_name"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateBy" column="update_by"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="remark" column="d_remark"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectOrderInfoVo">
+   SELECT
+	a.`id` AS a_id,
+	a.`store_info_id` AS a_store_info_id,
+	a.`order_no` AS a_order_no,
+	a.`sys_user_address_id` AS a_sys_user_address_id,
+	a.`order_price` AS a_order_price,
+	a.`fksj_time` AS a_fksj_time,
+	a.`product_id` AS a_product_id,
+	a.`number` AS a_number,
+	a.`unit_price` AS a_unit_price,
+	a.`price` AS a_price,
+	a.`state` AS a_state,
+	a.`create_by` AS a_create_by,
+	a.`create_by_name` AS a_create_by_name,
+	a.`create_time` AS a_create_time,
+	a.`update_by` AS a_update_by,
+	a.`update_time` AS a_update_time,
+	a.`remark` AS a_remark,
+	b.`id` AS b_id,
+	b.`name` AS b_name,
+	b.`business_scope` AS b_business_scope,
+	b.`contacts` AS b_contacts,
+	b.`phonenumber` AS b_phonenumber,
+	b.`address` AS b_address,
+	b.`create_by` AS b_create_by,
+	b.`create_by_name` AS b_create_by_name,
+	b.`create_time` AS b_create_time,
+	c.`id` AS c_id,
+	c.`recipient` AS c_recipient,
+	c.`phonenumber` AS c_phonenumber,
+	c.`province` AS c_province,
+	c.`city` AS c_city,
+	c.`area` AS c_area,
+	c.`address` AS c_address,
+	c.`create_by` AS c_create_by,
+	c.`create_by_name` AS c_create_by_name,
+	c.`create_time` AS c_create_time,
+	d.`id` AS d_id,
+	d.`name` AS d_name,
+	d.`price` AS d_price,
+	d.`type` AS d_type,
+	d.`category` AS d_category,
+	d.`img` AS d_img,
+	d.`brand` AS d_brand,
+	d.`specifications` AS d_specifications,
+	d.`bzq_time` AS d_bzq_time,
+	d.`scrq_time` AS d_scrq_time,
+	d.`create_by` AS d_create_by,
+	d.`create_by_name` AS d_create_by_name,
+	d.`create_time` AS d_create_time
+FROM
+	order_info a
+	LEFT JOIN store_info b ON a.store_info_id = b.id
+	LEFT JOIN sys_user_address c ON a.sys_user_address_id = c.id
+	LEFT JOIN store_commodity d ON a.product_id = d.id
+	LEFT JOIN sys_user u ON a.create_by = u.user_id
+    </sql>
+
+    <select id="selectOrderInfoList" parameterType="OrderInfo" resultMap="OrderInfoResult">
+        <include refid="selectOrderInfoVo"/>
+        <where>
+            <if test="storeInfoId != null ">and a.store_info_id = #{storeInfoId}</if>
+            <if test="orderNo != null  and orderNo != ''">and a.order_no = #{orderNo}</if>
+            <if test="sysUserAddressId != null ">and a.sys_user_address_id = #{sysUserAddressId}</if>
+            <if test="orderPrice != null ">and a.order_price = #{orderPrice}</if>
+            <if test="fksjTime != null ">and a.fksj_time = #{fksjTime}</if>
+            <if test="productId != null ">and a.product_id = #{productId}</if>
+            <if test="number != null ">and a.number = #{number}</if>
+            <if test="unitPrice != null ">and a.unit_price = #{unitPrice}</if>
+            <if test="price != null ">and a.price = #{price}</if>
+            <if test="state != null  and state != ''">and a.state = #{state}</if>
+            <if test="createByName != null  and createByName != ''">and a.create_by_name like concat('%',
+                #{createByName},
+                '%')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        ORDER BY a.id DESC
+    </select>
+
+    <select id="selectOrderInfoListSJ" parameterType="OrderInfo" resultMap="OrderInfoResult">
+        <include refid="selectOrderInfoVo"/>
+        <where>
+            <if test="storeInfoId != null ">and a.store_info_id = #{storeInfoId}</if>
+            <if test="orderNo != null  and orderNo != ''">and a.order_no = #{orderNo}</if>
+            <if test="sysUserAddressId != null ">and a.sys_user_address_id = #{sysUserAddressId}</if>
+            <if test="orderPrice != null ">and a.order_price = #{orderPrice}</if>
+            <if test="fksjTime != null ">and a.fksj_time = #{fksjTime}</if>
+            <if test="productId != null ">and a.product_id = #{productId}</if>
+            <if test="number != null ">and a.number = #{number}</if>
+            <if test="unitPrice != null ">and a.unit_price = #{unitPrice}</if>
+            <if test="price != null ">and a.price = #{price}</if>
+            <if test="state != null  and state != ''">and a.state = #{state}</if>
+            <if test="createByName != null  and createByName != ''">and a.create_by_name like concat('%',
+                #{createByName},
+                '%')
+            </if>
+            <if test="createBy != null  and createBy != ''">and b.create_by = #{createBy}</if>
+        </where>
+        ORDER BY a.id DESC
+    </select>
+
+    <select id="selectOrderInfoById" parameterType="Long" resultMap="OrderInfoResult">
+        <include refid="selectOrderInfoVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into order_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storeInfoId != null">store_info_id,</if>
+            <if test="orderNo != null and orderNo != ''">order_no,</if>
+            <if test="sysUserAddressId != null">sys_user_address_id,</if>
+            <if test="orderPrice != null">order_price,</if>
+            <if test="fksjTime != null">fksj_time,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="number != null">number,</if>
+            <if test="unitPrice != null">unit_price,</if>
+            <if test="price != null">price,</if>
+            <if test="state != null and state != ''">state,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storeInfoId != null">#{storeInfoId},</if>
+            <if test="orderNo != null and orderNo != ''">#{orderNo},</if>
+            <if test="sysUserAddressId != null">#{sysUserAddressId},</if>
+            <if test="orderPrice != null">#{orderPrice},</if>
+            <if test="fksjTime != null">#{fksjTime},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="number != null">#{number},</if>
+            <if test="unitPrice != null">#{unitPrice},</if>
+            <if test="price != null">#{price},</if>
+            <if test="state != null and state != ''">#{state},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOrderInfo" parameterType="OrderInfo">
+        update order_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storeInfoId != null">store_info_id = #{storeInfoId},</if>
+            <if test="orderNo != null and orderNo != ''">order_no = #{orderNo},</if>
+            <if test="sysUserAddressId != null">sys_user_address_id = #{sysUserAddressId},</if>
+            <if test="orderPrice != null">order_price = #{orderPrice},</if>
+            <if test="fksjTime != null">fksj_time = #{fksjTime},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="unitPrice != null">unit_price = #{unitPrice},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderInfoById" parameterType="Long">
+        delete from order_info where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderInfoByIds" parameterType="String">
+        delete from order_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.store.mapper.StoreCommodityMapper">
+
+    <resultMap type="StoreCommodity" id="StoreCommodityResult">
+        <result property="id" column="id"/>
+        <result property="storeInfoId" column="store_info_id"/>
+        <result property="storeInfoName" column="store_info_name"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="type" column="type"/>
+        <result property="category" column="category"/>
+        <result property="img" column="img"/>
+        <result property="brand" column="brand"/>
+        <result property="specifications" column="specifications"/>
+        <result property="bzqTime" column="bzq_time"/>
+        <result property="scrqTime" column="scrq_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectStoreCommodityVo">
+        SELECT
+	a.* ,
+	b.name as store_info_name
+FROM
+	store_commodity a
+	LEFT JOIN store_info b ON a.store_info_id = b.id
+	LEFT JOIN sys_user u ON a.create_by = u.user_id
+    </sql>
+
+    <select id="selectStoreCommodityList" parameterType="StoreCommodity" resultMap="StoreCommodityResult">
+        <include refid="selectStoreCommodityVo"/>
+        <where>
+            <if test="price != null ">and a.price = #{price}</if>
+            <if test="type != null  and type != ''">and a.type = #{type}</if>
+            <if test="category != null  and category != ''">and a.category = #{category}</if>
+            <if test="img != null  and img != ''">and a.img = #{img}</if>
+            <if test="brand != null  and brand != ''">and a.brand = #{brand}</if>
+            <if test="specifications != null  and specifications != ''">and a.specifications = #{specifications}</if>
+            <if test="bzqTime != null ">and a.bzq_time = #{bzqTime}</if>
+            <if test="scrqTime != null ">and a.scrq_time = #{scrqTime}</if>
+            <if test="createByName != null  and createByName != ''">and a.create_by_name like concat('%',
+                #{createByName},
+                '%')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        ORDER BY a.id DESC
+    </select>
+
+    <select id="selectStoreCommodityById" parameterType="Long" resultMap="StoreCommodityResult">
+        <include refid="selectStoreCommodityVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertStoreCommodity" parameterType="StoreCommodity" useGeneratedKeys="true" keyProperty="id">
+        insert into store_commodity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storeInfoId != null">store_info_id,</if>
+            <if test="name != null">name,</if>
+            <if test="price != null">price,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="img != null and img != ''">img,</if>
+            <if test="brand != null and brand != ''">brand,</if>
+            <if test="specifications != null and specifications != ''">specifications,</if>
+            <if test="bzqTime != null">bzq_time,</if>
+            <if test="scrqTime != null">scrq_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storeInfoId != null">#{storeInfoId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="price != null">#{price},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="img != null and img != ''">#{img},</if>
+            <if test="brand != null and brand != ''">#{brand},</if>
+            <if test="specifications != null and specifications != ''">#{specifications},</if>
+            <if test="bzqTime != null">#{bzqTime},</if>
+            <if test="scrqTime != null">#{scrqTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateStoreCommodity" parameterType="StoreCommodity">
+        update store_commodity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storeInfoId != null">store_info_id = #{storeInfoId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="img != null and img != ''">img = #{img},</if>
+            <if test="brand != null and brand != ''">brand = #{brand},</if>
+            <if test="specifications != null and specifications != ''">specifications = #{specifications},</if>
+            <if test="bzqTime != null">bzq_time = #{bzqTime},</if>
+            <if test="scrqTime != null">scrq_time = #{scrqTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStoreCommodityById" parameterType="Long">
+        delete from store_commodity where id = #{id}
+    </delete>
+
+    <delete id="deleteStoreCommodityByIds" parameterType="String">
+        delete from store_commodity where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

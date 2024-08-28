@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pet.mapper.PetLoseMapper">
+
+    <resultMap type="PetLose" id="PetLoseResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="img" column="img"/>
+        <result property="adress" column="adress"/>
+        <result property="loseTime" column="lose_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectPetLoseVo">
+        select a.* from pet_lose a
+        left join sys_user u on a.create_by=u.user_id
+    </sql>
+
+    <select id="selectPetLoseList" parameterType="PetLose" resultMap="PetLoseResult">
+        <include refid="selectPetLoseVo"/>
+        <where>
+            <if test="name != null  and name != ''">and a.name like concat('%', #{name}, '%')</if>
+            <if test="img != null  and img != ''">and a.img = #{img}</if>
+            <if test="adress != null  and adress != ''">and a.adress = #{adress}</if>
+            <if test="loseTime != null ">and a.lose_time = #{loseTime}</if>
+            <if test="createByName != null  and createByName != ''">and a.create_by_name like concat('%',
+                #{createByName},
+                '%')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        ORDER BY a.id DESC
+    </select>
+
+    <select id="selectPetLoseById" parameterType="Long" resultMap="PetLoseResult">
+        <include refid="selectPetLoseVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertPetLose" parameterType="PetLose" useGeneratedKeys="true" keyProperty="id">
+        insert into pet_lose
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="img != null and img != ''">img,</if>
+            <if test="adress != null and adress != ''">adress,</if>
+            <if test="loseTime != null">lose_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="img != null and img != ''">#{img},</if>
+            <if test="adress != null and adress != ''">#{adress},</if>
+            <if test="loseTime != null">#{loseTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePetLose" parameterType="PetLose">
+        update pet_lose
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="img != null and img != ''">img = #{img},</if>
+            <if test="adress != null and adress != ''">adress = #{adress},</if>
+            <if test="loseTime != null">lose_time = #{loseTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePetLoseById" parameterType="Long">
+        delete from pet_lose where id = #{id}
+    </delete>
+
+    <delete id="deletePetLoseByIds" parameterType="String">
+        delete from pet_lose where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

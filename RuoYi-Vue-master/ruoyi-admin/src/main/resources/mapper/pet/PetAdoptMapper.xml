@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pet.mapper.PetAdoptMapper">
+
+    <resultMap type="PetAdopt" id="PetAdoptResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="sex" column="sex"/>
+        <result property="category" column="category"/>
+        <result property="img" column="img"/>
+        <result property="age" column="age"/>
+        <result property="temperament" column="temperament"/>
+        <result property="vaccinum" column="vaccinum"/>
+        <result property="adoptionExpenses" column="adoption_expenses"/>
+        <result property="state" column="state"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectPetAdoptVo">
+        select id, name, sex, category, img, age, temperament, vaccinum, adoption_expenses, state, create_by, create_by_name, create_time, update_by, update_time, remark from pet_adopt
+    </sql>
+
+    <select id="selectPetAdoptList" parameterType="PetAdopt" resultMap="PetAdoptResult">
+        <include refid="selectPetAdoptVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="category != null  and category != ''">and category = #{category}</if>
+            <if test="img != null  and img != ''">and img = #{img}</if>
+            <if test="age != null ">and age = #{age}</if>
+            <if test="sex != null ">and sex = #{sex}</if>
+            <if test="temperament != null  and temperament != ''">and temperament = #{temperament}</if>
+            <if test="vaccinum != null  and vaccinum != ''">and vaccinum = #{vaccinum}</if>
+            <if test="adoptionExpenses != null ">and adoption_expenses = #{adoptionExpenses}</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="createByName != null  and createByName != ''">and create_by_name like concat('%', #{createByName},
+                '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectPetAdoptById" parameterType="Long" resultMap="PetAdoptResult">
+        <include refid="selectPetAdoptVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPetAdopt" parameterType="PetAdopt" useGeneratedKeys="true" keyProperty="id">
+        insert into pet_adopt
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="sex != null and sex != ''">sex,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="img != null and img != ''">img,</if>
+            <if test="age != null">age,</if>
+            <if test="temperament != null and temperament != ''">temperament,</if>
+            <if test="vaccinum != null and vaccinum != ''">vaccinum,</if>
+            <if test="adoptionExpenses != null">adoption_expenses,</if>
+            <if test="state != null and state != ''">state,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="sex != null and sex != ''">#{sex},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="img != null and img != ''">#{img},</if>
+            <if test="age != null">#{age},</if>
+            <if test="temperament != null and temperament != ''">#{temperament},</if>
+            <if test="vaccinum != null and vaccinum != ''">#{vaccinum},</if>
+            <if test="adoptionExpenses != null">#{adoptionExpenses},</if>
+            <if test="state != null and state != ''">#{state},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePetAdopt" parameterType="PetAdopt">
+        update pet_adopt
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="img != null and img != ''">img = #{img},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="temperament != null and temperament != ''">temperament = #{temperament},</if>
+            <if test="vaccinum != null and vaccinum != ''">vaccinum = #{vaccinum},</if>
+            <if test="adoptionExpenses != null">adoption_expenses = #{adoptionExpenses},</if>
+            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updatePetAdoptState">
+        update pet_adopt SET state = #{state} where id = #{id}
+    </update>
+
+    <delete id="deletePetAdoptById" parameterType="Long">
+        delete from pet_adopt where id = #{id}
+    </delete>
+
+    <delete id="deletePetAdoptByIds" parameterType="String">
+        delete from pet_adopt where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

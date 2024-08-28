@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pet.mapper.PetFosterApplicationMapper">
+
+    <resultMap type="PetFosterApplication" id="PetFosterApplicationResult">
+        <result property="id" column="id"/>
+        <result property="institutionId" column="institution_id"/>
+        <result property="institutionName" column="institution_name"/>
+        <result property="name" column="name"/>
+        <result property="sex" column="sex"/>
+        <result property="contacts" column="contacts"/>
+        <result property="phonenumber" column="phonenumber"/>
+        <result property="email" column="email"/>
+        <result property="address" column="address"/>
+        <result property="state" column="state"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectPetFosterApplicationVo">
+        select a.*,b.name as institution_name from pet_foster_application a
+        left join pet_foster_institution b on a.institution_id=b.id
+        left join sys_user u on a.create_by=u.user_id
+    </sql>
+
+    <select id="selectPetFosterApplicationList" parameterType="PetFosterApplication"
+            resultMap="PetFosterApplicationResult">
+        <include refid="selectPetFosterApplicationVo"/>
+        <where>
+            <if test="institutionId != null ">and a.institution_id = #{institutionId}</if>
+            <if test="name != null  and name != ''">and a.name like concat('%', #{name}, '%')</if>
+            <if test="sex != null  and sex != ''">and a.sex = #{sex}</if>
+            <if test="contacts != null  and contacts != ''">and a.contacts = #{contacts}</if>
+            <if test="phonenumber != null  and phonenumber != ''">and a.phonenumber = #{phonenumber}</if>
+            <if test="email != null  and email != ''">and a.email = #{email}</if>
+            <if test="address != null  and address != ''">and a.address = #{address}</if>
+            <if test="state != null  and state != ''">and a.state = #{state}</if>
+            <if test="createByName != null  and createByName != ''">and a.create_by_name like concat('%',
+                #{createByName},
+                '%')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        ORDER BY a.id DESC
+    </select>
+
+    <select id="selectPetFosterApplicationById" parameterType="Long" resultMap="PetFosterApplicationResult">
+        <include refid="selectPetFosterApplicationVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertPetFosterApplication" parameterType="PetFosterApplication" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into pet_foster_application
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="institutionId != null">institution_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="sex != null and sex != ''">sex,</if>
+            <if test="contacts != null and contacts != ''">contacts,</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+            <if test="email != null and email != ''">email,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="state != null and state != ''">state,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="institutionId != null">#{institutionId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="sex != null and sex != ''">#{sex},</if>
+            <if test="contacts != null and contacts != ''">#{contacts},</if>
+            <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+            <if test="email != null and email != ''">#{email},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="state != null and state != ''">#{state},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePetFosterApplication" parameterType="PetFosterApplication">
+        update pet_foster_application
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="institutionId != null">institution_id = #{institutionId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="contacts != null and contacts != ''">contacts = #{contacts},</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber = #{phonenumber},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePetFosterApplicationById" parameterType="Long">
+        delete from pet_foster_application where id = #{id}
+    </delete>
+
+    <delete id="deletePetFosterApplicationByIds" parameterType="String">
+        delete from pet_foster_application where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

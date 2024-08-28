@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysUserAddressMapper">
+
+    <resultMap type="SysUserAddress" id="SysUserAddressResult">
+        <result property="id" column="id"/>
+        <result property="recipient" column="recipient"/>
+        <result property="phonenumber" column="phonenumber"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="area" column="area"/>
+        <result property="address" column="address"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectSysUserAddressVo">
+        select a.* from sys_user_address a left join sys_user u on a.create_by=u.user_id
+    </sql>
+
+    <select id="selectSysUserAddressList" parameterType="SysUserAddress" resultMap="SysUserAddressResult">
+        <include refid="selectSysUserAddressVo"/>
+        <where>
+            <if test="recipient != null  and recipient != ''">and a.recipient = #{recipient}</if>
+            <if test="phonenumber != null  and phonenumber != ''">and a.phonenumber = #{phonenumber}</if>
+            <if test="province != null  and province != ''">and a.province = #{province}</if>
+            <if test="city != null  and city != ''">and a.city = #{city}</if>
+            <if test="area != null  and area != ''">and a.area = #{area}</if>
+            <if test="address != null  and address != ''">and a.address = #{address}</if>
+            <if test="createByName != null  and createByName != ''">and a.create_by_name like concat('%',
+                #{createByName},
+                '%')
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        ORDER BY a.id DESC
+    </select>
+
+    <select id="selectSysUserAddressById" parameterType="Long" resultMap="SysUserAddressResult">
+        <include refid="selectSysUserAddressVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertSysUserAddress" parameterType="SysUserAddress" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recipient != null and recipient != ''">recipient,</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+            <if test="province != null and province != ''">province,</if>
+            <if test="city != null and city != ''">city,</if>
+            <if test="area != null and area != ''">area,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recipient != null and recipient != ''">#{recipient},</if>
+            <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+            <if test="province != null and province != ''">#{province},</if>
+            <if test="city != null and city != ''">#{city},</if>
+            <if test="area != null and area != ''">#{area},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysUserAddress" parameterType="SysUserAddress">
+        update sys_user_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recipient != null and recipient != ''">recipient = #{recipient},</if>
+            <if test="phonenumber != null and phonenumber != ''">phonenumber = #{phonenumber},</if>
+            <if test="province != null and province != ''">province = #{province},</if>
+            <if test="city != null and city != ''">city = #{city},</if>
+            <if test="area != null and area != ''">area = #{area},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysUserAddressById" parameterType="Long">
+        delete from sys_user_address where id = #{id}
+    </delete>
+
+    <delete id="deleteSysUserAddressByIds" parameterType="String">
+        delete from sys_user_address where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
